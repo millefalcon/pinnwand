@@ -91,9 +91,21 @@ window.addEventListener("load", function(event) {
 
 });
 
+function say_hello(e) {
+	console.log("hello world");
+}
+
 function new_file_add() {
     var template = document.querySelector("section.file-template").cloneNode(true);
     template.className = "file-part file-extra";
+
+
+	var extra_ta = document.querySelectorAll("section.file-part.file-extra textarea");
+    console.log("extra", extra_ta[0]);
+        for(i = 0; i < extra_ta.length; i++) {
+            extra_ta[i].value = "hello world";
+        }
+
     template.querySelector("button.remove").addEventListener("click", function(event) {
         event.preventDefault();
 
@@ -164,18 +176,18 @@ function make_indent(event) {
 
 		var start = this.selectionStart;
 		var end = this.selectionEnd;
-        var v = this.value;
-        var thisLine = "";
-        var indentation = 1;
-        for (var i = start-1; i >= 0 && v[i] != "\n"; i--) {
-            thisLine = v[i] + thisLine;
-        }
-        for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
-            indentation++;
-        }
-        this.value = v.slice(0, start) + "\n" + " ".repeat(indentation-1) + v.slice(start);
-        this.selectionStart = start + indentation;
-        this.selectionEnd = end + indentation;
+		var v = this.value;
+		var thisLine = "";
+		var indentation = 0;
+		for (var i = start-1; i >= 0 && v[i] != "\n"; i--) {
+		    thisLine = v[i] + thisLine;
+		}
+		for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
+		    indentation++;
+		}
+		this.value = v.slice(0, start) + "\n" + " ".repeat(indentation) + v.slice(start);
+		this.selectionStart = start + indentation + 1; // the +1 is for accounting the '\n' with the 4 indented space
+		this.selectionEnd = end + indentation + 1;    // which i was too stupid to notice :)
 
 	}
 }
